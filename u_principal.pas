@@ -1,4 +1,4 @@
-unit u_principal;
+﻿unit u_principal;
 
 interface
 
@@ -7,8 +7,14 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uCEFWinControl, uCEFWindowParent,
   Vcl.ExtCtrls, Vcl.StdCtrls, uCEFChromium,  controller.injetaJS, system.JSON,
 
-  //CEF units
-  uCEFInterfaces, uCEFConstants, uCEFTypes;
+  //units adicionais obrigatórias
+  uCEFInterfaces, uCEFConstants, uCEFTypes, UnitCEFLoadHandlerChromium;
+
+
+  const
+  CEFBROWSER_CREATED          = WM_APP + $100;
+  CEFBROWSER_CHILDDESTROYED   = WM_APP + $101;
+  CEFBROWSER_DESTROY          = WM_APP + $102;
 
 type
   Tfrm_principal = class(TForm)
@@ -18,7 +24,6 @@ type
     Panel1: TPanel;
     Label1: TLabel;
     Label2: TLabel;
-    Label3: TLabel;
     Label4: TLabel;
     Button2: TButton;
     memo_js: TMemo;
@@ -32,7 +37,13 @@ type
     CEFWindowParent1: TCEFWindowParent;
     Memo1: TMemo;
     Chromium1: TChromium;
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    Edit4: TEdit;
+    Label5: TLabel;
+    Edit5: TEdit;
+    Label6: TLabel;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Chromium1BeforeClose(Sender: TObject; const browser: ICefBrowser);
     procedure FormCreate(Sender: TObject);
@@ -61,14 +72,32 @@ type
     procedure Chromium1TitleChange(Sender: TObject; const browser: ICefBrowser;
       const title: ustring);
     procedure Button3Click(Sender: TObject);
+    procedure Chromium1LoadEnd(Sender: TObject; const browser: ICefBrowser;
+      const frame: ICefFrame; httpStatusCode: Integer);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
 
   protected
-    // Vari�veis para controlar quando podemos destruir o formul�rio com seguran�a
+    // Variáveis para controlar quando podemos destruir o formulário com segurança
     FCanClose : boolean;  // Defina como True em TChromium.OnBeforeClose
     FClosing  : boolean;  // Defina como True no evento CloseQuery.
 
+    // You have to handle this two messages to call NotifyMoveOrResizeStarted or some page elements will be misaligned.
+    procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
+    procedure WMMoving(var aMessage : TMessage); message WM_MOVING;
+    // You also have to handle these two messages to set GlobalCEFApp.OsmodalLoop
+    procedure WMEnterMenuLoop(var aMessage: TMessage); message WM_ENTERMENULOOP;
+    procedure WMExitMenuLoop(var aMessage: TMessage); message WM_EXITMENULOOP;
+
+    procedure BrowserCreated(var aMessage : TMessage); message CEF_AFTERCREATED;
+    procedure BrowserDestroyMsg(var aMessage : TMessage); message CEF_DESTROY;
+
   private
     { Private declarations }
+    ChromiumStarted: Boolean;
+
   public
     { Public declarations }
     JS1: string;
@@ -81,7 +110,51 @@ var
 
 implementation
 
+uses
+  uCEFApplication, uCefMiscFunctions;
+
 {$R *.dfm}
+
+procedure Tfrm_principal.BrowserCreated(var aMessage : TMessage);
+begin
+  Caption            := '🎯 TInject  || Versão BETA || Envio de mensagem de texto e de imagens png base64 - Contribuições para o projeto entrar em contato: whatsapp (81) 9.96302385 Mike';
+  AddressPnl.Enabled := True;
+  frm_principal.WindowState := wsMaximized;
+end;
+
+procedure Tfrm_principal.BrowserDestroyMsg(var aMessage : TMessage);
+begin
+  CEFWindowParent1.Free;
+end;
+
+procedure Tfrm_principal.WMMove(var aMessage : TWMMove);
+begin
+  inherited;
+
+  if (Chromium1 <> nil) then Chromium1.NotifyMoveOrResizeStarted;
+end;
+
+procedure Tfrm_principal.WMMoving(var aMessage : TMessage);
+begin
+  inherited;
+
+  if (Chromium1 <> nil) then Chromium1.NotifyMoveOrResizeStarted;
+end;
+
+procedure Tfrm_principal.WMEnterMenuLoop(var aMessage: TMessage);
+begin
+  inherited;
+
+  if (aMessage.wParam = 0) and (GlobalCEFApp <> nil) then GlobalCEFApp.OsmodalLoop := True;
+end;
+
+procedure Tfrm_principal.WMExitMenuLoop(var aMessage: TMessage);
+begin
+  inherited;
+
+  if (aMessage.wParam = 0) and (GlobalCEFApp <> nil) then GlobalCEFApp.OsmodalLoop := False;
+end;
+
 
 procedure Tfrm_principal.Button2Click(Sender: TObject);
 var
@@ -91,10 +164,17 @@ begin
   begin
     send := 'window.WAPI.sendMessageToID("'+'55'+edit1.text+'@c.us'+'", "'+edit2.text+'")';
     Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
-    sleep(1000);
+    sleep(random(2000));
+
+    send := 'window.WAPI.sendMessageToID("'+'55'+edit4.text+'@c.us'+'", "'+edit2.text+'")';
+    Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
+    sleep(random(2000));
+
+    send := 'window.WAPI.sendMessageToID("'+'55'+edit5.text+'@c.us'+'", "'+edit2.text+'")';
+    Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
+    sleep(random(2000));
     application.MessageBox('Mensagem enviada com sucesso.','dInject - By Mike Lustosa 81996302385', MB_ICONASTERISK + MB_OK);
   end;
-
 end;
 
 procedure Tfrm_principal.Button3Click(Sender: TObject);
@@ -111,11 +191,35 @@ begin
 
 end;
 
+procedure Tfrm_principal.Button4Click(Sender: TObject);
+var JS: string;
+begin
+  //injeta o JS principal
+  JS :=  memo_js.Text;
+  frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+
+end;
+
+procedure Tfrm_principal.Button5Click(Sender: TObject);
+var JS: string;
+begin
+  JS :=  'WAPI.getUnreadMessages(includeMe="True", includeNotifications="True", use_unread_count="True")';
+  frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+end;
+
+procedure Tfrm_principal.Button6Click(Sender: TObject);
+var JS: string;
+begin
+  JS :=  'console.dir(document.body)';
+  frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+end;
+
 procedure Tfrm_principal.Chromium1AfterCreated(Sender: TObject;
   const browser: ICefBrowser);
 begin
-  { Agora que o navegador est� totalmente inicializado, podemos enviar uma mensagem para
-    o formul�rio principal para carregar a p�gina inicial da web.}
+  { Agora que o navegador está totalmente inicializado, podemos enviar uma mensagem para
+    o formulário principal para carregar a página inicial da web.}
+  //PostMessage(Handle, CEFBROWSER_CREATED, 0, 0);
   PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
 end;
 
@@ -151,12 +255,18 @@ procedure Tfrm_principal.Chromium1ConsoleMessage(Sender: TObject;
 var
   Json: TJSONObject;
 begin
+ {Aqui devemos pegar o log do console e criar um JSon para percorrer as mensagens recebidas
+ pelo whatsApp}
   if Chromium1.Initialized then
   begin
     Json := TJSONObject.Create;
-    if Json.Parse(TEncoding.UTF8.GetBytes(string(message)), 0) >= 0 then
+    if Json.Parse(TEncoding.ANSI.GetBytes((message)), 0) >= 0 then
     begin
-      Memo1.Lines.Add(Json.ToString);
+      if i > 3 then
+      begin
+        Memo1.Lines.Add('Nova mensagem! '+string(source));
+      end;
+
       if Json <> nil then
       begin
         Json.Free;
@@ -164,6 +274,12 @@ begin
     end;
   end;
 
+end;
+
+procedure Tfrm_principal.Chromium1LoadEnd(Sender: TObject;
+  const browser: ICefBrowser; const frame: ICefFrame; httpStatusCode: Integer);
+begin
+  //Aqui possível rotina para verificar se usuário está logado e código foi injetado
 end;
 
 procedure Tfrm_principal.Chromium1OpenUrlFromTab(Sender: TObject;
@@ -186,15 +302,10 @@ begin
   end;
 end;
 
-procedure Tfrm_principal.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  action          := cafree;
-  frm_principal   := nil;
-end;
-
 procedure Tfrm_principal.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose := FCanClose;
+
   if not(FClosing) then
     begin
       FClosing := True;
@@ -211,10 +322,14 @@ begin
   autenticado := false;
 end;
 
+procedure Tfrm_principal.FormDestroy(Sender: TObject);
+begin
+  PostMessage(Handle, CEFBROWSER_CHILDDESTROYED, 0, 0);
+end;
+
 procedure Tfrm_principal.FormShow(Sender: TObject);
 begin
-  if not(Chromium1.CreateBrowser(CEFWindowParent1)) then
-    Timer1.Enabled := True;
+  if not(Chromium1.CreateBrowser(CEFWindowParent1)) then Timer1.Enabled := True;
 end;
 
 procedure Tfrm_principal.Timer1Timer(Sender: TObject);
@@ -229,6 +344,7 @@ var
   arq: TextFile;
   linha, JS: string;
 begin
+  //Rotina para leitura e inject do arquivo js.abr ---- 12/10/2019 Mike
   if autenticado = true then
   begin
     AssignFile(arq, ExtractFilePath(Application.ExeName)+ 'js.abr');
@@ -238,13 +354,13 @@ begin
 
     if (IOResult <> 0) then
     begin
-      showmessage('Erro na abertura do arquivo.');
+      showmessage('Erro na abertura do arquivo JS.');
     end else
       begin
         // verifica se o ponteiro de arquivo atingiu a marca de final de arquivo
         while (not eof(arq)) do
         begin
-          readln(arq, linha); //L� linha do arquivo
+          readln(arq, linha); //Lê linha do arquivo
           memo_js.Lines.Add(linha);
         end;
         CloseFile(arq); //Fecha o arquivo texto aberto
@@ -254,9 +370,6 @@ begin
        JS :=  memo_js.Text;
        frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
 
-       //Injeta para verificar se est� logado
-       JS := 'WAPI.isLoggedIn()';
-       frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
        frm_principal.timer2.Enabled := false;
   end;
 end;
