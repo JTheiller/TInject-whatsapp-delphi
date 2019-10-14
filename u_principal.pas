@@ -197,7 +197,6 @@ begin
   //injeta o JS principal
   JS :=  memo_js.Text;
   frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
-
 end;
 
 procedure Tfrm_principal.Button5Click(Sender: TObject);
@@ -257,23 +256,18 @@ var
 begin
  {Aqui devemos pegar o log do console e criar um JSon para percorrer as mensagens recebidas
  pelo whatsApp}
-  if Chromium1.Initialized then
-  begin
-    Json := TJSONObject.Create;
-    if Json.Parse(TEncoding.ANSI.GetBytes((message)), 0) >= 0 then
+    try
+      Json := TJSONObject.Create;
+      Json.Parse(TEncoding.UTF8.GetBytes(string(message)), 0);
+      Memo1.Lines.Add('Nova mensagem: '+Json.ToString);
+
+    if Json <> nil then
     begin
-      if i > 3 then
-      begin
-        Memo1.Lines.Add('Nova mensagem! '+string(source));
-      end;
-
-      if Json <> nil then
-      begin
-        Json.Free;
-      end;
+      Json.Free;
     end;
-  end;
-
+    finally
+      //Json.Free;
+    end;
 end;
 
 procedure Tfrm_principal.Chromium1LoadEnd(Sender: TObject;
@@ -295,7 +289,7 @@ procedure Tfrm_principal.Chromium1TitleChange(Sender: TObject;
   const browser: ICefBrowser; const title: ustring);
 begin
   i := i + 1;
-  memo1.Lines.Add(intToStr(i));
+  memo1.Lines.Add('ID: '+intToStr(i));
   if i > 3 then
   begin
     autenticado := true;

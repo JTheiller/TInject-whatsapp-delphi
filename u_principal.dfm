@@ -213,15 +213,16 @@ object frm_principal: Tfrm_principal
   object CEFWindowParent1: TCEFWindowParent
     Left = 0
     Top = 201
-    Width = 917
+    Width = 840
     Height = 376
     Align = alClient
     TabOrder = 2
+    ExplicitWidth = 917
   end
   object Memo1: TMemo
-    Left = 917
+    Left = 840
     Top = 201
-    Width = 103
+    Width = 180
     Height = 376
     Align = alRight
     Font.Charset = DEFAULT_CHARSET
