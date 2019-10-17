@@ -5,6 +5,10 @@ INSTRUÇÕES PARA USO --><br></br>
 
 É NECESSÁRIO:<br></br><br></br>
 
+Tutorial de instalação no youtube:<br>
+https://youtu.be/iJAKU8A8fmc
+
+
 1-Clonar o repositório TInject-whatsapp-delphi
 <br></br>
 2-Baixar e instalar o CEF4Delphi em: https://drive.google.com/file/d/11cjHyJ9JYjnbQQI-gufJfDVLjJDHKhv3/view?usp=sharing
@@ -15,7 +19,9 @@ INSTRUÇÕES PARA USO --><br></br>
 <br></br>
 5-Adicione ao libary path do Delphi a pasta TInject-whatsapp-delphi e todas as subpastas
 <br><br>
-6-Abrir e compilar o arquivo Tinject.dproj
+6-Clique no menu *Component* > *Install component*. Selecione a unit uTinject pasta(service) e selecionar a opção *install into a new package*. Por fim, digite o nome TInject em *Package name*.
+<><>
+7-Abrir e compilar o arquivo Tinject.dproj
 <br></br><br></br>
 
 O componente está 50% concluído. <br><br>Recurso que falta: Capturar o *log do console* do componente TChromium e gerar um *JSON* para tratamento das mensagens recebidas pelo WhatsApp.
