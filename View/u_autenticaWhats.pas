@@ -15,7 +15,9 @@ uses
   //units adicionais obrigatórias
   uCEFInterfaces, uCEFConstants, uCEFTypes, UnitCEFLoadHandlerChromium, uCEFApplication,
   Vcl.StdCtrls, Vcl.ComCtrls, System.ImageList, Vcl.ImgList, System.JSON,
-  Vcl.Buttons, Vcl.Imaging.pngimage;
+  Vcl.Buttons, Vcl.Imaging.pngimage,
+
+  Rest.Json;
 
   const
     CEFBROWSER_CREATED          = WM_APP + $100;
@@ -65,6 +67,10 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Image1Click(Sender: TObject);
+    procedure Chromium1Jsdialog(Sender: TObject; const browser: ICefBrowser;
+      const originUrl: ustring; dialogType: TCefJsDialogType; const messageText,
+      defaultPromptText: ustring; const callback: ICefJsDialogCallback;
+      out suppressMessage, Result: Boolean);
   protected
    // Variáveis para controlar quando podemos destruir o formulário com segurança
     FCanClose : boolean;  // Defina como True em TChromium.OnBeforeClose
@@ -89,6 +95,7 @@ type
     procedure Send(vNum, vText:string);
     procedure SendBase64(vBase64, vNum, vFileName, vText:string);
     function caractersWhats(vText: string): string;
+    function GetContacts: String;
   end;
 
 var
@@ -211,6 +218,32 @@ begin
 
 end;
 
+procedure Tfrm_autenticaWhats.Chromium1Jsdialog(Sender: TObject;
+  const browser: ICefBrowser; const originUrl: ustring;
+  dialogType: TCefJsDialogType; const messageText, defaultPromptText: ustring;
+  const callback: ICefJsDialogCallback; out suppressMessage, Result: Boolean);
+const
+  InjectResult = 'TInjectResult:';
+var
+  Json: TJSONArray;
+begin
+  //Capture Result Js
+
+  //Temporary
+  //if Copy(messageText,1,Length(InjectResult)) = InjectResult then
+  begin
+    Json := TJSONObject.ParseJSONValue(messageText) as TJSONArray;
+
+    if Assingned(Json) then
+    begin
+      ShowMessage( Json.Format );
+    end;
+
+    //Evitar apresentar a mensagem.
+    suppressMessage := False;
+  end;
+end;
+
 procedure Tfrm_autenticaWhats.Chromium1LoadEnd(Sender: TObject;
   const browser: ICefBrowser; const frame: ICefFrame; httpStatusCode: Integer);
 begin
@@ -273,6 +306,16 @@ end;
 procedure Tfrm_autenticaWhats.FormShow(Sender: TObject);
 begin
   if not(Chromium1.CreateBrowser(CEFWindowParent1)) then Timer1.Enabled := True;
+end;
+
+function Tfrm_autenticaWhats.GetContacts: String;
+var
+ JS: string;
+begin
+ JS := 'window.WAPI.getAllContacts();';
+
+ if Chromium1.Browser <> nil then
+      Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
 end;
 
 procedure Tfrm_autenticaWhats.Image1Click(Sender: TObject);

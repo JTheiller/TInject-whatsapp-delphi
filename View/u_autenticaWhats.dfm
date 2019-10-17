@@ -3298,6 +3298,7 @@ object frm_autenticaWhats: Tfrm_autenticaWhats
     OnLoadEnd = Chromium1LoadEnd
     OnTitleChange = Chromium1TitleChange
     OnConsoleMessage = Chromium1ConsoleMessage
+    OnJsdialog = Chromium1Jsdialog
     OnBeforePopup = Chromium1BeforePopup
     OnAfterCreated = Chromium1AfterCreated
     OnBeforeClose = Chromium1BeforeClose

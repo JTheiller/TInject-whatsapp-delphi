@@ -43,6 +43,7 @@ type
 
   protected
     { Protected declarations }
+    FContacts: String;
     FMySubComp1: TMySubComp;
   public
 
@@ -51,6 +52,7 @@ type
     procedure send(vNum, vMess: string);
     procedure sendBase64(vBase64, vNum, vFileName, vMess: string);
     procedure fileToBase64(vFile: string);
+    function GetContacts: String;
   published
     { Published declarations }
 
@@ -104,6 +106,43 @@ end;
 procedure TInjectWhatsapp.fileToBase64(vFile: string);
 begin
   uBase64.FileToBase64(vFile);
+end;
+
+function TInjectWhatsapp.GetContacts: String;
+begin
+  FActivityDialogThread := TThread.CreateAnonymousThread(procedure
+      var vGetDelay: integer;
+      begin
+        try
+
+          vGetDelay := random(vDelay);
+
+          sleep(vGetDelay);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if Assigned(frm_autenticaWhats) then
+            begin
+              frm_autenticaWhats.GetContacts;
+            end;
+          end);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if FMySubComp1.ShowRandom then
+            begin
+              showMessage('Random: '+vGetDelay.ToString+' ms');
+            end;
+          end);
+
+          finally
+          begin
+
+          end;
+        end;
+      end);
+  FActivityDialogThread.FreeOnTerminate := False;
+  FActivityDialogThread.Start;
 end;
 
 procedure TInjectWhatsapp.send(vNum, vMess: string);

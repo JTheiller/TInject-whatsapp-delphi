@@ -10715,6 +10715,17 @@ object frm_principal: Tfrm_principal
       TabOrder = 6
       OnClick = Button1Click
     end
+    object btnGetContacts: TButton
+      Left = 880
+      Top = 218
+      Width = 140
+      Height = 25
+      Caption = 'Anexar um arquivo'
+      ImageIndex = 0
+      Images = ImageList1
+      TabOrder = 7
+      OnClick = btnGetContactsClick
+    end
   end
   object Memo1: TMemo
     Left = 880
@@ -10729,7 +10740,6 @@ object frm_principal: Tfrm_principal
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    Visible = False
   end
   object lista: TListView
     AlignWithMargins = True
