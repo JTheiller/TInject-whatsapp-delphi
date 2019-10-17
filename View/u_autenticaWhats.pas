@@ -87,7 +87,7 @@ type
     autenticado: boolean;
     i: integer;
     procedure Send(vNum, vText:string);
-    procedure SendBase64(vBase64, vNum, vText:string);
+    procedure SendBase64(vBase64, vNum, vFileName, vText:string);
     function caractersWhats(vText: string): string;
   end;
 
@@ -98,13 +98,27 @@ implementation
 
 {$R *.dfm}
 
+Function removeCaracter(texto : String) : String;
+Begin
+
+  While pos('-', Texto) <> 0 Do
+    delete(Texto,pos('-', Texto),1);
+
+  While pos('/', Texto) <> 0 Do
+    delete(Texto,pos('/', Texto),1);
+
+  While pos(',', Texto) <> 0 Do
+    delete(Texto,pos(',', Texto),1);
+
+  Result := Texto;
+End;
+
 function Tfrm_autenticaWhats.caractersWhats(vText: string): string;
 begin
  vText := StringReplace(vText, sLineBreak,'\n',[rfReplaceAll]);
  vText := StringReplace((vText), #13,'',[rfReplaceAll]);
  Result := vText;
 end;
-
 
 procedure Tfrm_autenticaWhats.BrowserDestroyMsg(var aMessage : TMessage);
 begin
@@ -266,17 +280,30 @@ begin
   frm_autenticaWhats.Hide;
 end;
 
-procedure Tfrm_autenticaWhats.SendBase64(vBase64, vNum, vText: string);
+procedure Tfrm_autenticaWhats.SendBase64(vBase64, vNum, vFileName, vText: string);
 var
  JS: string;
+ Base64File: TStringList;
+ i: integer;
+ vLine: string;
 begin
- vText := caractersWhats(vText);
+  vText := caractersWhats(vText);
+  removeCaracter(vFileName);
+  Base64File:= TStringList.Create;
+  Base64File.Text := vBase64;
+  for i := 0 to Base64File.Count -1  do
+  begin
+    vLine := vLine + Base64File[i];
+  end;
+  vBase64 := vLine;
+  JS := 'window.WAPI.sendImage("'+Trim(vBase64)+'","'+Trim(vNum)+'", "'+Trim(vFileName)+'", "'+Trim(vText)+'")';
 
- JS := Format('window.WAPI.sendImage("%s","%s", "%s", "%s");',
-    [Trim(vBase64), Trim(vNum), Trim('teste.png'),Trim(vText)]);
-
- if Chromium1.Browser <> nil then
+  if Chromium1.Browser <> nil then
+  begin
     Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+  end;
+
+  freeAndNil(vBase64);
 end;
 
 procedure Tfrm_autenticaWhats.Send(vNum, vText: string);
@@ -285,11 +312,10 @@ var
 begin
  vText := caractersWhats(vText);
 
- JS := Format('window.WAPI.sendMessageToID("%s","%s");',
-    [Trim(vNum),Trim(vText)]);
+ JS := 'window.WAPI.sendMessageToID("'+Trim(vNum)+'","'+Trim(vText)+'")';
 
  if Chromium1.Browser <> nil then
-    Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+      Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
 
 end;
 

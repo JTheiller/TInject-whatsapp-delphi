@@ -103,7 +103,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Controller\controller.injetaJS.pas"/>
         <DCCReference Include="u_principal.pas">
             <Form>frm_principal</Form>
             <FormType>dfm</FormType>

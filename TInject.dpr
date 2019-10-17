@@ -9,7 +9,6 @@ uses
   {$ENDIF }
   uCEFApplication,
   uCEFConstants,
-  controller.injetaJS in 'Controller\controller.injetaJS.pas',
   u_principal in 'u_principal.pas' {frm_principal},
   UnitCEFHandlerSessionChromium in 'Services\UnitCEFHandlerSessionChromium.pas',
   UnitCEFLoadHandlerChromium in 'Services\UnitCEFLoadHandlerChromium.pas';

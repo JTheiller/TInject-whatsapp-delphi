@@ -7,12 +7,13 @@ unit uTInject;
 interface
 
 uses
-  System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, u_autenticaWhats;
+  System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, u_autenticaWhats, UBase64;
 
   var
     vDelay: integer;
     FActivityDialogThread: TThread;
 type
+
   TMySubComp = class(TComponent)
 
   public
@@ -48,7 +49,8 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure startWhatsapp();
     procedure send(vNum, vMess: string);
-    procedure sendBase64(vBase64, vNum, vMess: string);
+    procedure sendBase64(vBase64, vNum, vFileName, vMess: string);
+    procedure fileToBase64(vFile: string);
   published
     { Published declarations }
 
@@ -98,6 +100,12 @@ begin
   FMySubComp1.SetSubComponent(true);
 end;
 
+
+procedure TInjectWhatsapp.fileToBase64(vFile: string);
+begin
+  uBase64.FileToBase64(vFile);
+end;
+
 procedure TInjectWhatsapp.send(vNum, vMess: string);
 begin
   inherited;
@@ -136,23 +144,21 @@ begin
   FActivityDialogThread.Start;
 end;
 
-procedure TInjectWhatsapp.sendBase64(vBase64, vNum, vMess: string);
+procedure TInjectWhatsapp.sendBase64(vBase64, vNum, vFileName, vMess: string);
 begin
   inherited;
   FActivityDialogThread := TThread.CreateAnonymousThread(procedure
       var vGetDelay: integer;
       begin
         try
-
           vGetDelay := random(vDelay);
-
           sleep(vGetDelay);
 
           TThread.Synchronize(nil, procedure
           begin
             if Assigned(frm_autenticaWhats) then
             begin
-              frm_autenticaWhats.sendBase64(vBase64,'55'+vNum+'@c.us', vMess);
+              frm_autenticaWhats.sendBase64(vBase64,'55'+vNum+'@c.us', vFileName, vMess);
             end;
           end);
 

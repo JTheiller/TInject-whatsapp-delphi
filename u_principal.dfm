@@ -14,9 +14,6 @@ object frm_principal: Tfrm_principal
   Position = poOwnerFormCenter
   WindowState = wsMaximized
   OnClose = FormClose
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -2237,7 +2234,7 @@ object frm_principal: Tfrm_principal
       243)
     object Label1: TLabel
       Left = 13
-      Top = 119
+      Top = 151
       Width = 90
       Height = 13
       Caption = 'N'#250'mero de destino'
@@ -2248,13 +2245,6 @@ object frm_principal: Tfrm_principal
       Width = 72
       Height = 13
       Caption = 'Sua mensagem'
-    end
-    object Label4: TLabel
-      Left = 13
-      Top = 165
-      Width = 176
-      Height = 13
-      Caption = 'String base64 (Apenas imagens png)'
     end
     object Label3: TLabel
       Left = 13
@@ -10583,85 +10573,86 @@ object frm_principal: Tfrm_principal
       OnClick = whatsOffClick
     end
     object Label5: TLabel
-      Left = 575
-      Top = 19
-      Width = 291
-      Height = 129
+      Left = 738
+      Top = 26
+      Width = 163
+      Height = 72
       Caption = 'DEMO'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 14869218
-      Font.Height = -107
+      Font.Color = 14671839
+      Font.Height = -60
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label4: TLabel
+      Left = 758
+      Top = 86
+      Width = 138
+      Height = 24
+      Caption = 'do componente'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 14671839
+      Font.Height = -20
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
     end
     object ed_num: TEdit
       Left = 13
-      Top = 138
+      Top = 170
       Width = 227
       Height = 21
       TabOrder = 0
       TextHint = 'ddd+n'#250'mero'
     end
-    object ed_base64: TEdit
-      Left = 13
-      Top = 184
-      Width = 994
-      Height = 21
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 1
-      Text = 
-        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFc' +
-        'SJAAAADUlEQVR42mP8z8DwBwAFAgH9XSO6wwAAAABJRU5ErkJggg=='
-      TextHint = 'Mensagem de texto'
-    end
     object Button5: TButton
       Left = 246
-      Top = 136
-      Width = 107
+      Top = 168
+      Width = 147
       Height = 25
       Caption = 'Adicionar'
       ImageIndex = 0
       Images = ImageList1
-      TabOrder = 2
+      TabOrder = 1
       OnClick = Button5Click
     end
     object Button6: TButton
       Left = 246
       Top = 30
-      Width = 107
+      Width = 147
       Height = 25
-      Caption = 'Enviar texto'
+      Caption = 'Enviar apenas texto'
       ImageIndex = 0
       Images = ImageList1
-      TabOrder = 3
+      TabOrder = 2
       OnClick = Button6Click
     end
     object mem_message: TMemo
       Left = 13
       Top = 32
       Width = 227
-      Height = 75
-      TabOrder = 4
+      Height = 100
+      TabOrder = 3
     end
     object Button4: TButton
       Left = 246
-      Top = 81
-      Width = 107
+      Top = 69
+      Width = 147
       Height = 25
-      Caption = 'Enviar imagem'
+      Caption = 'Anexar um arquivo'
       ImageIndex = 0
       Images = ImageList1
-      TabOrder = 5
+      TabOrder = 4
       OnClick = Button4Click
     end
     object GroupBox1: TGroupBox
-      Left = 364
-      Top = 26
-      Width = 205
-      Height = 135
+      Left = 399
+      Top = 25
+      Width = 234
+      Height = 168
       Caption = 'Configura'#231#245'es'
-      TabOrder = 6
+      TabOrder = 5
       object Label6: TLabel
         Left = 10
         Top = 88
@@ -10670,7 +10661,7 @@ object frm_principal: Tfrm_principal
         Caption = 'Random delay'
       end
       object lbl_track: TLabel
-        Left = 104
+        Left = 136
         Top = 66
         Width = 90
         Height = 29
@@ -10694,7 +10685,7 @@ object frm_principal: Tfrm_principal
       object TrackBar1: TTrackBar
         Left = 3
         Top = 102
-        Width = 199
+        Width = 225
         Height = 45
         Max = 10000
         SelStart = 10000
@@ -10712,6 +10703,17 @@ object frm_principal: Tfrm_principal
         ThumbColor = 16744448
         OnClick = ToggleSwitch2Click
       end
+    end
+    object Button1: TButton
+      Left = 246
+      Top = 108
+      Width = 147
+      Height = 25
+      Caption = 'Enviar  texto e arquivo'
+      ImageIndex = 0
+      Images = ImageList1
+      TabOrder = 6
+      OnClick = Button1Click
     end
   end
   object Memo1: TMemo
@@ -10784,7 +10786,7 @@ object frm_principal: Tfrm_principal
     Enabled = False
     Interval = 4000
     OnTimer = Timer1Timer
-    Left = 592
+    Left = 672
     Top = 104
   end
   object InjectWhatsapp1: TInjectWhatsapp
@@ -10794,5 +10796,10 @@ object frm_principal: Tfrm_principal
     Config.ShowRandom = False
     Left = 232
     Top = 216
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'Imagens|*jpg;*.jpg;*.bmp;*.png;*.pdf;*.mp4;*.mp3;*.rar'
+    Left = 592
+    Top = 32
   end
 end
