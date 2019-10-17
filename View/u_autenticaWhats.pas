@@ -234,7 +234,7 @@ begin
   begin
     Json := TJSONObject.ParseJSONValue(messageText) as TJSONArray;
 
-    if Assingned(Json) then
+    if Assigned(Json) then
     begin
       ShowMessage( Json.Format );
     end;
