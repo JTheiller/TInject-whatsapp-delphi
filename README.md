@@ -7,7 +7,7 @@ INSTRUÇÕES PARA USO --><br></br>
 
 1-Clonar o repositório TInject-whatsapp-delphi
 <br></br>
-2-Baixar e instalar o CEF4Delphi em: https://github.com/salvadordf/CEF4Delphi
+2-Baixar e instalar o CEF4Delphi em: https://drive.google.com/file/d/11cjHyJ9JYjnbQQI-gufJfDVLjJDHKhv3/view?usp=sharing
 <br></br>
 3-Baixar a pasta BIN em: https://drive.google.com/file/d/1bqybeVFYxVqLyAMr0gi5g8Ez60wBUAwc/view?usp=sharing
 <br></br>
