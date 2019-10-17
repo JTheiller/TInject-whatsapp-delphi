@@ -11,15 +11,15 @@ https://youtu.be/iJAKU8A8fmc
 
 1-Clonar o repositório TInject-whatsapp-delphi
 <br></br>
-2-Baixar e instalar o CEF4Delphi em: https://drive.google.com/file/d/11cjHyJ9JYjnbQQI-gufJfDVLjJDHKhv3/view?usp=sharing
+2-Baixar, instalar e adicionar ao library path o CEF4Delphi. Link para download: https://drive.google.com/file/d/11cjHyJ9JYjnbQQI-gufJfDVLjJDHKhv3/view?usp=sharing
 <br></br>
-3-Baixar a pasta BIN em: https://drive.google.com/file/d/1bqybeVFYxVqLyAMr0gi5g8Ez60wBUAwc/view?usp=sharing
+3-Baixar a pasta BIN. Link para download: https://drive.google.com/file/d/1bqybeVFYxVqLyAMr0gi5g8Ez60wBUAwc/view?usp=sharing
 <br></br>
 4-Copiar todo o conteúdo baixado da pasta BIN no passo 3 para a pasta BIN na raiz do projeto (Caso não exista a pasta BIN em seu projeto Crie)
 <br></br>
 5-Adicione ao libary path do Delphi a pasta TInject-whatsapp-delphi e todas as subpastas
 <br><br>
-6-Opção 1: Instale o arquivo TInjeck.dpk
+6-Opção 1: Instale o arquivo TInject.dpk
 <br><br>
 7-Opção 2: Clique no menu *Component* > *Install component*. Selecione a unit uTinject pasta(service) e selecionar a opção *install into a new package*. Por fim, digite o nome TInject em *Package name*.
 <><>
