@@ -1,0 +1,190 @@
+//TInject Criado por Mike W. Lustosa
+//Códido aberto à comunidade Delphi
+//mikelustosa@gmail.com
+
+unit uTInject;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, u_autenticaWhats;
+
+  var
+    vDelay: integer;
+    FActivityDialogThread: TThread;
+type
+  TMySubComp = class(TComponent)
+
+  public
+    FAutoInject     :Boolean;
+    FAutoDelay      :Integer;
+    FSyncContacts   :Boolean;
+    FShowRandom     :Boolean;
+
+  private
+    procedure SetAutoInject(const Value: Boolean);
+    procedure SetAutoDelay(const Value: integer);
+    procedure SetSyncContacts(const Value: Boolean);
+    procedure SetShowRandom(const Value: Boolean);
+
+  published
+    property AutoInject   :Boolean read FAutoInject   write SetAutoInject;
+    property AutoDelay    :integer read FAutoDelay    write SetAutoDelay;
+    property SyncContacts :Boolean read FSyncContacts write SetSyncContacts;
+    property ShowRandom   :Boolean read FShowRandom   write SetShowRandom;
+  end;
+
+
+  TInjectWhatsapp = class(TComponent)
+
+  private
+    { Private declarations }
+
+  protected
+    { Protected declarations }
+    FMySubComp1: TMySubComp;
+  public
+
+    constructor Create(AOwner: TComponent); override;
+    procedure startWhatsapp();
+    procedure send(vNum, vMess: string);
+    procedure sendBase64(vBase64, vNum, vMess: string);
+  published
+    { Published declarations }
+
+    property Config: TMySubComp read FMySubComp1;
+  end;
+  var resultado : integer;
+procedure Register;
+
+implementation
+
+
+procedure Register;
+begin
+  RegisterComponents('TInjectWhatsapp', [TInjectWhatsapp]);
+end;
+
+{ TInjectWhatsapp }
+
+procedure TMySubComp.SetAutoInject(const Value: Boolean);
+begin
+  FAutoInject := Value;
+end;
+
+procedure TMySubComp.SetShowRandom(const Value: Boolean);
+begin
+  FShowRandom := value;
+end;
+
+procedure TMySubComp.SetSyncContacts(const Value: Boolean);
+begin
+  FSyncContacts := Value;
+end;
+
+procedure TMySubComp.SetAutoDelay(const Value: Integer);
+begin
+  FAutoDelay := Value;
+  vDelay := FAutoDelay;
+end;
+
+{ TInjectWhatsapp }
+
+constructor TInjectWhatsapp.Create(AOwner: TComponent);
+begin
+  inherited;
+  FMySubComp1 := TMySubComp.Create(self);
+  FMySubComp1.Name := 'AutoInject';
+  FMySubComp1.SetSubComponent(true);
+end;
+
+procedure TInjectWhatsapp.send(vNum, vMess: string);
+begin
+  inherited;
+  FActivityDialogThread := TThread.CreateAnonymousThread(procedure
+      var vGetDelay: integer;
+      begin
+        try
+
+          vGetDelay := random(vDelay);
+
+          sleep(vGetDelay);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if Assigned(frm_autenticaWhats) then
+            begin
+              frm_autenticaWhats.Send('55'+vNum+'@c.us', vMess);
+            end;
+          end);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if FMySubComp1.ShowRandom then
+            begin
+              showMessage('Random: '+vGetDelay.ToString+' ms');
+            end;
+          end);
+
+          finally
+          begin
+
+          end;
+        end;
+      end);
+  FActivityDialogThread.FreeOnTerminate := False;
+  FActivityDialogThread.Start;
+end;
+
+procedure TInjectWhatsapp.sendBase64(vBase64, vNum, vMess: string);
+begin
+  inherited;
+  FActivityDialogThread := TThread.CreateAnonymousThread(procedure
+      var vGetDelay: integer;
+      begin
+        try
+
+          vGetDelay := random(vDelay);
+
+          sleep(vGetDelay);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if Assigned(frm_autenticaWhats) then
+            begin
+              frm_autenticaWhats.sendBase64(vBase64,'55'+vNum+'@c.us', vMess);
+            end;
+          end);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if FMySubComp1.ShowRandom then
+            begin
+              showMessage('Random: '+vGetDelay.ToString+' ms');
+            end;
+          end);
+
+          finally
+          begin
+
+          end;
+        end;
+      end);
+  FActivityDialogThread.FreeOnTerminate := False;
+  FActivityDialogThread.Start;
+end;
+
+procedure TInjectWhatsapp.startWhatsapp;
+begin
+  if not Assigned(frm_autenticaWhats) then
+  begin
+   frm_autenticaWhats       := Tfrm_autenticaWhats.Create(self);
+   frm_autenticaWhats.Show;
+  end else
+  begin
+    frm_autenticaWhats.Show;
+  end;
+end;
+
+end.
+

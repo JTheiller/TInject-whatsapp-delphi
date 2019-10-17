@@ -5,10 +5,12 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uCEFWinControl, uCEFWindowParent,
-  Vcl.ExtCtrls, Vcl.StdCtrls, uCEFChromium,  controller.injetaJS, system.JSON,
+  Vcl.ExtCtrls, uCEFChromium,  controller.injetaJS, system.JSON,
 
   //units adicionais obrigatórias
-  uCEFInterfaces, uCEFConstants, uCEFTypes, UnitCEFLoadHandlerChromium;
+  uCEFInterfaces, uCEFConstants, uCEFTypes, UnitCEFLoadHandlerChromium,
+  Vcl.StdCtrls, Vcl.ComCtrls, System.ImageList, Vcl.ImgList, uTInject,
+  Vcl.Imaging.pngimage, Vcl.Buttons, Vcl.WinXCtrls;
 
 
   const
@@ -18,38 +20,38 @@ uses
 
 type
   Tfrm_principal = class(TForm)
-    AddressPnl: TPanel;
-    AddressEdt: TEdit;
-    GoBtn: TButton;
     Panel1: TPanel;
     Label1: TLabel;
     Label2: TLabel;
     Label4: TLabel;
-    Button2: TButton;
-    memo_js: TMemo;
-    Edit1: TEdit;
-    Edit2: TEdit;
-    Button3: TButton;
-    Button1: TButton;
-    Edit3: TEdit;
-    Timer1: TTimer;
-    Timer2: TTimer;
-    CEFWindowParent1: TCEFWindowParent;
+    ed_num: TEdit;
+    ed_base64: TEdit;
     Memo1: TMemo;
-    Chromium1: TChromium;
-    Edit4: TEdit;
-    Label5: TLabel;
-    Edit5: TEdit;
-    Label6: TLabel;
-    Button4: TButton;
     Button5: TButton;
+    lista: TListView;
+    ImageList1: TImageList;
+    Label3: TLabel;
+    Image1: TImage;
     Button6: TButton;
+    mem_message: TMemo;
+    Button4: TButton;
+    Image2: TImage;
+    whatsOff: TImage;
+    whatsOn: TImage;
+    Timer1: TTimer;
+    Label5: TLabel;
+    GroupBox1: TGroupBox;
+    Label6: TLabel;
+    TrackBar1: TTrackBar;
+    lbl_track: TLabel;
+    ToggleSwitch2: TToggleSwitch;
+    Label7: TLabel;
+    InjectWhatsapp1: TInjectWhatsapp;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Chromium1BeforeClose(Sender: TObject; const browser: ICefBrowser);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
     procedure Chromium1AfterCreated(Sender: TObject;
       const browser: ICefBrowser);
     procedure Chromium1BeforePopup(Sender: TObject; const browser: ICefBrowser;
@@ -74,10 +76,15 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Chromium1LoadEnd(Sender: TObject; const browser: ICefBrowser;
       const frame: ICefFrame; httpStatusCode: Integer);
-    procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
-    procedure Button6Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TrackBar1Change(Sender: TObject);
+    procedure ToggleSwitch2Click(Sender: TObject);
+    procedure whatsOnClick(Sender: TObject);
+    procedure whatsOffClick(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
 
   protected
     // Variáveis para controlar quando podemos destruir o formulário com segurança
@@ -97,7 +104,6 @@ type
   private
     { Private declarations }
     ChromiumStarted: Boolean;
-
   public
     { Public declarations }
     JS1: string;
@@ -111,34 +117,33 @@ var
 implementation
 
 uses
-  uCEFApplication, uCefMiscFunctions;
+  uCEFApplication, uCefMiscFunctions, u_autenticaWhats;
 
 {$R *.dfm}
 
 procedure Tfrm_principal.BrowserCreated(var aMessage : TMessage);
 begin
   Caption            := '🎯 TInject  || Versão BETA || Envio de mensagem de texto e de imagens png base64 - Contribuições para o projeto entrar em contato: whatsapp (81) 9.96302385 Mike';
-  AddressPnl.Enabled := True;
   frm_principal.WindowState := wsMaximized;
 end;
 
 procedure Tfrm_principal.BrowserDestroyMsg(var aMessage : TMessage);
 begin
-  CEFWindowParent1.Free;
+  //CEFWindowParent1.Free;
 end;
 
 procedure Tfrm_principal.WMMove(var aMessage : TWMMove);
 begin
   inherited;
 
-  if (Chromium1 <> nil) then Chromium1.NotifyMoveOrResizeStarted;
+  //if (Chromium1 <> nil) then Chromium1.NotifyMoveOrResizeStarted;
 end;
 
 procedure Tfrm_principal.WMMoving(var aMessage : TMessage);
 begin
   inherited;
 
-  if (Chromium1 <> nil) then Chromium1.NotifyMoveOrResizeStarted;
+//  if (Chromium1 <> nil) then Chromium1.NotifyMoveOrResizeStarted;
 end;
 
 procedure Tfrm_principal.WMEnterMenuLoop(var aMessage: TMessage);
@@ -156,61 +161,41 @@ begin
 end;
 
 
-procedure Tfrm_principal.Button2Click(Sender: TObject);
-var
-  send: string;
-begin
-  if (edit1.Text <> '') and (edit2.Text <> '') then
-  begin
-    send := 'window.WAPI.sendMessageToID("'+'55'+edit1.text+'@c.us'+'", "'+edit2.text+'")';
-    Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
-    sleep(random(2000));
-
-    send := 'window.WAPI.sendMessageToID("'+'55'+edit4.text+'@c.us'+'", "'+edit2.text+'")';
-    Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
-    sleep(random(2000));
-
-    send := 'window.WAPI.sendMessageToID("'+'55'+edit5.text+'@c.us'+'", "'+edit2.text+'")';
-    Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
-    sleep(random(2000));
-    application.MessageBox('Mensagem enviada com sucesso.','dInject - By Mike Lustosa 81996302385', MB_ICONASTERISK + MB_OK);
-  end;
-end;
-
 procedure Tfrm_principal.Button3Click(Sender: TObject);
 var
   send: string;
 begin
-  if (edit1.Text <> '') and (edit2.Text <> '') then
-  begin
-    send := 'window.WAPI.sendImage('+'"'+edit3.text+'"'+', "'+'55'+edit1.text+'@c.us'+'", "Test.png", "Imagem fundo red")';
-    Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
-    sleep(1000);
-    application.MessageBox('Imagem enviada com sucesso.','TInject - By Mike Lustosa 81996302385', MB_ICONASTERISK + MB_OK);
-   end;
+//  if (edit1.Text <> '') and (edit2.Text <> '') then
+//  begin
+//    send := 'window.WAPI.sendImage('+'"'+edit3.text+'"'+', "'+'55'+edit1.text+'@c.us'+'", "Test.png", "Imagem fundo red")';
+//   // Chromium1.Browser.MainFrame.ExecuteJavaScript(send, 'about:blank', 0);
+//    sleep(1000);
+//    application.MessageBox('Imagem enviada com sucesso.','TInject - By Mike Lustosa 81996302385', MB_ICONASTERISK + MB_OK);
+//   end;
 
 end;
 
 procedure Tfrm_principal.Button4Click(Sender: TObject);
-var JS: string;
 begin
-  //injeta o JS principal
-  JS :=  memo_js.Text;
-  frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+  InjectWhatsapp1.sendBase64(ed_base64.Text, ed_num.Text, mem_message.Text);
 end;
 
 procedure Tfrm_principal.Button5Click(Sender: TObject);
 var JS: string;
+var Item: TListItem;
 begin
-  JS :=  'WAPI.getUnreadMessages(includeMe="True", includeNotifications="True", use_unread_count="True")';
-  frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+//  JS :=  'WAPI.getUnreadMessages(includeMe="True", includeNotifications="True", use_unread_count="True")';
+//  frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+  Item := lista.Items.Add;
+  item.Caption := '55'+ed_num.Text;
+  item.SubItems.Add(item.Caption+'SubItem 1');
+  item.SubItems.Add(item.Caption+'SubItem 2');
+  item.ImageIndex := 0;
 end;
 
 procedure Tfrm_principal.Button6Click(Sender: TObject);
-var JS: string;
 begin
-  JS :=  'console.dir(document.body)';
-  frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+  InjectWhatsapp1.send(ed_num.Text, mem_message.Text);
 end;
 
 procedure Tfrm_principal.Chromium1AfterCreated(Sender: TObject;
@@ -296,41 +281,56 @@ begin
   end;
 end;
 
+procedure Tfrm_principal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    application.Terminate;
+end;
+
 procedure Tfrm_principal.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  CanClose := FCanClose;
-
-  if not(FClosing) then
-    begin
-      FClosing := True;
-      Visible  := False;
-      Chromium1.CloseBrowser(True);
-    end;
+//  CanClose := FCanClose;
+//
+//  if not(FClosing) then
+//    begin
+//      FClosing := True;
+//      Visible  := False;
+//      Chromium1.CloseBrowser(True);
+//    end;
 end;
 
 procedure Tfrm_principal.FormCreate(Sender: TObject);
 begin
-  FCanClose := False;
-  FClosing  := False;
-  Chromium1.DefaultURL := AddressEdt.Text;
-  autenticado := false;
+//  FCanClose := False;
+//  FClosing  := False;
+//  //Chromium1.DefaultURL := AddressEdt.Text;
+//  autenticado := false;
 end;
 
 procedure Tfrm_principal.FormDestroy(Sender: TObject);
 begin
-  PostMessage(Handle, CEFBROWSER_CHILDDESTROYED, 0, 0);
+//  PostMessage(Handle, CEFBROWSER_CHILDDESTROYED, 0, 0);
 end;
 
 procedure Tfrm_principal.FormShow(Sender: TObject);
 begin
-  if not(Chromium1.CreateBrowser(CEFWindowParent1)) then Timer1.Enabled := True;
+//  if not(Chromium1.CreateBrowser(CEFWindowParent1)) then Timer1.Enabled := True;
+  timer1.Enabled := true;
 end;
 
 procedure Tfrm_principal.Timer1Timer(Sender: TObject);
 begin
-  Timer1.Enabled := False;
-  if not(Chromium1.CreateBrowser(CEFWindowParent1)) and not(Chromium1.Initialized) then
-    Timer1.Enabled := True;
+  if Assigned(frm_autenticaWhats) then
+  begin
+    if frm_autenticaWhats.autenticado = true then
+    begin
+      whatsOn.Visible := true;
+      whatsOff.Visible := false;
+    end else
+    begin
+      whatsOff.Visible := true;
+      whatsOn.Visible := false;
+    end;
+  end;
 end;
 
 procedure Tfrm_principal.Timer2Timer(Sender: TObject);
@@ -355,17 +355,44 @@ begin
         while (not eof(arq)) do
         begin
           readln(arq, linha); //Lê linha do arquivo
-          memo_js.Lines.Add(linha);
+          //memo_js.Lines.Add(linha);
         end;
         CloseFile(arq); //Fecha o arquivo texto aberto
       end;
 
        //injeta o JS principal
-       JS :=  memo_js.Text;
-       frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+       //JS :=  memo_js.Text;
+       //frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
 
-       frm_principal.timer2.Enabled := false;
+       //frm_principal.timer2.Enabled := false;
   end;
+end;
+
+procedure Tfrm_principal.ToggleSwitch2Click(Sender: TObject);
+begin
+  if ToggleSwitch2.IsOn then
+  begin
+    InjectWhatsapp1.Config.ShowRandom := true;
+  end else
+  begin
+    InjectWhatsapp1.Config.ShowRandom := false;
+  end;
+end;
+
+procedure Tfrm_principal.TrackBar1Change(Sender: TObject);
+begin
+  lbl_track.Caption := intToStr(TrackBar1.Position);
+  InjectWhatsapp1.Config.AutoDelay := TrackBar1.Position;
+end;
+
+procedure Tfrm_principal.whatsOffClick(Sender: TObject);
+begin
+  InjectWhatsapp1.startWhatsapp;
+end;
+
+procedure Tfrm_principal.whatsOnClick(Sender: TObject);
+begin
+  InjectWhatsapp1.startWhatsapp;
 end;
 
 end.

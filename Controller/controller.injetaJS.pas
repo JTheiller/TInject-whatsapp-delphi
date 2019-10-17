@@ -50,12 +50,12 @@ begin
 
        //injeta o JS principal
        JS :=  array_js[0];
-       frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+       //frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
 
        //verifica se está logado
        JS := 'WAPI.isLoggedIn()';
-       frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
-       frm_principal.timer2.Enabled := false;
+      // frm_principal.Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+      // frm_principal.timer2.Enabled := false;
        array_js[0] := '';
   end;
 end;
