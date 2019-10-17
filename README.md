@@ -1,9 +1,8 @@
 # TInject-whatsapp-delphi
 Componente TInject para criação de chatBots com delphi<br></br><br></br>
 
-INSTRUÇÕES PARA USO --><br></br>
+INSTRUÇÕES PARA USO DO TInject --><br></br>
 
-É NECESSÁRIO:<br></br><br></br>
 
 Tutorial de instalação no youtube:<br>
 https://youtu.be/iJAKU8A8fmc
@@ -22,7 +21,7 @@ https://youtu.be/iJAKU8A8fmc
 6-Opção 1: Instale o arquivo TInject.dpk
 <br><br>
 7-Opção 2: Clique no menu *Component* > *Install component*. Selecione a unit uTinject pasta(service) e selecionar a opção *install into a new package*. Por fim, digite o nome TInject em *Package name*.
-<><>
+<br><br>
 8-Abrir e compilar o arquivo Tinject.dproj
 <br></br><br></br>
 
