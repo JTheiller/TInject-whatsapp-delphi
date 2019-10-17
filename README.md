@@ -11,9 +11,11 @@ INSTRUÇÕES PARA USO --><br></br>
 <br></br>
 3-Baixar a pasta BIN em: https://drive.google.com/file/d/1bqybeVFYxVqLyAMr0gi5g8Ez60wBUAwc/view?usp=sharing
 <br></br>
-4-Copiar todo o conteúdo baixado da pasta BIN no passo 3 para a pasta BIN na raiz do projeto (Caso não exista a pasta BIN em seu projeto. Crie)
+4-Copiar todo o conteúdo baixado da pasta BIN no passo 3 para a pasta BIN na raiz do projeto (Caso não exista a pasta BIN em seu projeto Crie)
 <br></br>
-5-Abrir e compilar o arquivo Tinject.dproj
+5-Adicione ao libary path do Delphi a pasta TInject-whatsapp-delphi e todas as subpastas
+<br><br>
+6-Abrir e compilar o arquivo Tinject.dproj
 <br></br><br></br>
 
 O componente está 50% concluído. <br><br>Recurso que falta: Capturar o *log do console* do componente TChromium e gerar um *JSON* para tratamento das mensagens recebidas pelo WhatsApp.
