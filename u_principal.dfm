@@ -10716,11 +10716,11 @@ object frm_principal: Tfrm_principal
       OnClick = Button1Click
     end
     object btnGetContacts: TButton
-      Left = 880
-      Top = 218
-      Width = 140
+      Left = 246
+      Top = 199
+      Width = 147
       Height = 25
-      Caption = 'Anexar um arquivo'
+      Caption = 'Lista de contatos'
       ImageIndex = 0
       Images = ImageList1
       TabOrder = 7

@@ -96,12 +96,16 @@ type
     procedure SendBase64(vBase64, vNum, vFileName, vText:string);
     function caractersWhats(vText: string): string;
     function GetContacts: String;
+    function GetUnReadMessages: String;
   end;
 
 var
   frm_autenticaWhats: Tfrm_autenticaWhats;
 
 implementation
+
+uses
+  u_principal;
 
 {$R *.dfm}
 
@@ -225,22 +229,39 @@ procedure Tfrm_autenticaWhats.Chromium1Jsdialog(Sender: TObject;
 const
   InjectResult = 'TInjectResult:';
 var
-  Json: TJSONArray;
+  JsonBase: TJSONObject;
+  JsonArray: TJSONArray;
+  JSonItem: TJSONValue;
+  Text: String;
+  ANumber: String;
 begin
   //Capture Result Js
 
   //Temporary
   //if Copy(messageText,1,Length(InjectResult)) = InjectResult then
   begin
-    Json := TJSONObject.ParseJSONValue(messageText) as TJSONArray;
+    Text := '{"result": '
+             + messageText
+           +'}';
 
-    if Assigned(Json) then
+    JsonBase := TJSONObject.Create;
+    JsonBase.Parse(TEncoding.UTF8.GetBytes(string(Text)), 0);
+
+    if Assigned(JsonBase) then
     begin
-      ShowMessage( Json.Format );
+      JsonArray := JsonBase.GetValue('result') as TJSONArray;
+      for JSonItem in JsonArray do
+      begin
+        ANumber := Copy(TJSONObject(JSonItem).GetValue('id').Value
+                       ,1,Pos('@',TJSONObject(JSonItem).GetValue('id').Value)-1);
+
+        //Add uses Principal for teste... rsrs tem que desfazer rsrs
+        frm_principal.AddContactList( ANumber );
+      end;
     end;
 
     //Evitar apresentar a mensagem.
-    suppressMessage := False;
+    suppressMessage := True;
   end;
 end;
 
@@ -313,6 +334,16 @@ var
  JS: string;
 begin
  JS := 'window.WAPI.getAllContacts();';
+
+ if Chromium1.Browser <> nil then
+      Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);
+end;
+
+function Tfrm_autenticaWhats.GetUnReadMessages: String;
+var
+ JS: string;
+begin
+ JS := 'window.WAPI.getUnreadMessages(includeMe="True",includeNotifications="True",use_unread_count="True");';
 
  if Chromium1.Browser <> nil then
       Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);

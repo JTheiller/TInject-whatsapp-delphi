@@ -112,6 +112,7 @@ type
     vBase64Str, vFileNameURL: string;
     autenticado: boolean;
     i: integer;
+    procedure AddContactList(ANumber: String);
   end;
 
 var
@@ -123,6 +124,20 @@ uses
   uCEFApplication, uCefMiscFunctions, u_autenticaWhats;
 
 {$R *.dfm}
+
+procedure Tfrm_principal.AddContactList(ANumber: String);
+var
+  JS: string;
+  Item: TListItem;
+begin
+  Item := lista.Items.Add;
+  if Length(ANumber) < 12 then
+     ANumber := '55' + ANumber;
+  item.Caption := ANumber;
+  item.SubItems.Add(item.Caption+'SubItem 1');
+  item.SubItems.Add(item.Caption+'SubItem 2');
+  item.ImageIndex := 0;
+end;
 
 procedure Tfrm_principal.BrowserCreated(var aMessage : TMessage);
 begin
@@ -214,14 +229,8 @@ begin
 end;
 
 procedure Tfrm_principal.Button5Click(Sender: TObject);
-var JS: string;
-var Item: TListItem;
 begin
-  Item := lista.Items.Add;
-  item.Caption := '55'+ed_num.Text;
-  item.SubItems.Add(item.Caption+'SubItem 1');
-  item.SubItems.Add(item.Caption+'SubItem 2');
-  item.ImageIndex := 0;
+  AddContactList( ed_num.Text );
 end;
 
 procedure Tfrm_principal.Button6Click(Sender: TObject);
