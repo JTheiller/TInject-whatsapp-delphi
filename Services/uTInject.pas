@@ -41,7 +41,7 @@ type
     { Private declarations }
   protected
     { Protected declarations }
-    FRetornoAllContacts: TRetornoAllContacts;
+    FAllContacts: TRetornoAllContacts;
     FOnGetContactList: TNotifyEvent;
     FContacts: String;
     FMySubComp1: TMySubComp;
@@ -53,7 +53,7 @@ type
     procedure fileToBase64(vFile: string);
     function GetContacts: String;
     function GetUnReadMessages: String;
-    property RetornoAllContacts: TRetornoAllContacts read FRetornoAllContacts write FRetornoAllContacts;
+    property AllContacts: TRetornoAllContacts read FAllContacts write FAllContacts;
   published
     { Published declarations }
     property Config: TMySubComp read FMySubComp1;

@@ -346,8 +346,8 @@ procedure Tfrm_principal.InjectWhatsapp1GetContactList(Sender: TObject);
 var
   AContact: TContactClass;
 begin
-  for AContact in InjectWhatsapp1.RetornoAllContacts.result do
-      AddContactList( InjectWhatsapp1.RetornoAllContacts.result[0].id );
+  for AContact in InjectWhatsapp1.AllContacts.result do
+      AddContactList( AContact.id );
 end;
 
 procedure Tfrm_principal.Timer1Timer(Sender: TObject);

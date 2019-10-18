@@ -248,7 +248,7 @@ var
   begin
     if Assigned( _Inject ) then
     begin
-      _Inject.RetornoAllContacts := TRetornoAllContacts.FromJsonString( JsonBase.ToString );
+      _Inject.AllContacts := TRetornoAllContacts.FromJsonString( JsonBase.ToString );
 
       if Assigned( _Inject.OnGetContactList ) then
          _Inject.OnGetContactList(Self);
