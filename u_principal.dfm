@@ -10740,6 +10740,17 @@ object frm_principal: Tfrm_principal
       TabOrder = 8
       OnClick = btnNotReadClick
     end
+    object Button2: TButton
+      Left = 399
+      Top = 199
+      Width = 147
+      Height = 25
+      Caption = 'Lista de contatos'
+      ImageIndex = 0
+      Images = ImageList1
+      TabOrder = 9
+      OnClick = btnGetContactsClick
+    end
   end
   object Memo1: TMemo
     Left = 648
@@ -10774,7 +10785,7 @@ object frm_principal: Tfrm_principal
   object Memo2: TMemo
     Left = 61
     Top = 248
-    Width = 69
+    Width = 52
     Height = 321
     Anchors = [akLeft, akTop, akBottom]
     Lines.Strings = (
@@ -10828,6 +10839,7 @@ object frm_principal: Tfrm_principal
     Config.AutoDelay = 0
     Config.SyncContacts = False
     Config.ShowRandom = False
+    OnGetContactList = InjectWhatsapp1GetContactList
     Left = 232
     Top = 216
   end

@@ -7,7 +7,7 @@ unit uTInject;
 interface
 
 uses
-  System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, u_autenticaWhats, UBase64;
+  System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, UBase64, uClasses;
 
   var
     vDelay: integer;
@@ -21,7 +21,6 @@ type
     FAutoDelay      :Integer;
     FSyncContacts   :Boolean;
     FShowRandom     :Boolean;
-
   private
     procedure SetAutoInject(const Value: Boolean);
     procedure SetAutoDelay(const Value: integer);
@@ -40,13 +39,13 @@ type
 
   private
     { Private declarations }
-
   protected
     { Protected declarations }
+    FRetornoAllContacts: TRetornoAllContacts;
+    FOnGetContactList: TNotifyEvent;
     FContacts: String;
     FMySubComp1: TMySubComp;
   public
-
     constructor Create(AOwner: TComponent); override;
     procedure startWhatsapp();
     procedure send(vNum, vMess: string);
@@ -54,15 +53,19 @@ type
     procedure fileToBase64(vFile: string);
     function GetContacts: String;
     function GetUnReadMessages: String;
+    property RetornoAllContacts: TRetornoAllContacts read FRetornoAllContacts write FRetornoAllContacts;
   published
     { Published declarations }
-
     property Config: TMySubComp read FMySubComp1;
+    property OnGetContactList: TNotifyEvent read FOnGetContactList write FOnGetContactList;
   end;
   var resultado : integer;
 procedure Register;
 
 implementation
+
+uses
+  u_autenticaWhats;
 
 
 procedure Register;
@@ -102,7 +105,6 @@ begin
   FMySubComp1.Name := 'AutoInject';
   FMySubComp1.SetSubComponent(true);
 end;
-
 
 procedure TInjectWhatsapp.fileToBase64(vFile: string);
 begin
@@ -262,6 +264,7 @@ begin
   if not Assigned(frm_autenticaWhats) then
   begin
    frm_autenticaWhats       := Tfrm_autenticaWhats.Create(self);
+   frm_autenticaWhats._inject := Self;
    frm_autenticaWhats.Show;
   end else
   begin

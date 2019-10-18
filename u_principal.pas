@@ -11,7 +11,7 @@ uses
   //units adicionais obrigatórias
   uCEFInterfaces, uCEFConstants, uCEFTypes, UnitCEFLoadHandlerChromium,
   Vcl.StdCtrls, Vcl.ComCtrls, System.ImageList, Vcl.ImgList, uTInject,
-  Vcl.Imaging.pngimage, Vcl.Buttons, Vcl.WinXCtrls, System.NetEncoding;
+  Vcl.Imaging.pngimage, Vcl.Buttons, Vcl.WinXCtrls, System.NetEncoding, uClasses;
 
   //############ ATENÇÃO AQUI ####################
   //Constantes obrigatórias para controle do destroy do TChromium
@@ -53,6 +53,7 @@ type
     btnGetContacts: TButton;
     btnNotRead: TButton;
     Memo2: TMemo;
+    Button2: TButton;
     procedure Chromium1BeforeClose(Sender: TObject; const browser: ICefBrowser);
     procedure FormShow(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -89,6 +90,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure btnGetContactsClick(Sender: TObject);
     procedure btnNotReadClick(Sender: TObject);
+    procedure InjectWhatsapp1GetContactList(Sender: TObject);
 
   protected
 
@@ -154,6 +156,8 @@ begin
 end;
 
 procedure Tfrm_principal.btnGetContactsClick(Sender: TObject);
+var
+  AContact: TContactClass;
 begin
   InjectWhatsapp1.GetContacts();
 end;
@@ -336,6 +340,14 @@ end;
 procedure Tfrm_principal.FormShow(Sender: TObject);
 begin
   timer1.Enabled := true;
+end;
+
+procedure Tfrm_principal.InjectWhatsapp1GetContactList(Sender: TObject);
+var
+  AContact: TContactClass;
+begin
+  for AContact in InjectWhatsapp1.RetornoAllContacts.result do
+      AddContactList( InjectWhatsapp1.RetornoAllContacts.result[0].id );
 end;
 
 procedure Tfrm_principal.Timer1Timer(Sender: TObject);

@@ -17,7 +17,7 @@ uses
   Vcl.StdCtrls, Vcl.ComCtrls, System.ImageList, Vcl.ImgList, System.JSON,
   Vcl.Buttons, Vcl.Imaging.pngimage,
 
-  Rest.Json, uClasses;
+  Rest.Json, uClasses, uTInject;
 
   const
     CEFBROWSER_CREATED          = WM_APP + $100;
@@ -25,6 +25,9 @@ uses
     CEFBROWSER_DESTROY          = WM_APP + $102;
 
 type
+
+  TpRetorno = (retStatus, retContact);
+
   Tfrm_autenticaWhats = class(TForm)
     CEFWindowParent1: TCEFWindowParent;
     Chromium1: TChromium;
@@ -86,9 +89,9 @@ type
     procedure BrowserDestroyMsg(var aMessage : TMessage); message CEF_DESTROY;
   private
     { Private declarations }
-
   public
     { Public declarations }
+    _Inject: TInjectWhatsapp;
     JS1: string;
     autenticado: boolean;
     i: integer;
@@ -103,9 +106,6 @@ var
   frm_autenticaWhats: Tfrm_autenticaWhats;
 
 implementation
-
-uses
-  u_principal;
 
 {$R *.dfm}
 
@@ -245,14 +245,16 @@ var
 //  end;
 
   procedure AllContact;
-  var
-    RetornoAllContacts : TRetornoAllContacts;
-    AContact: TContactClass;
   begin
-    RetornoAllContacts := TRetornoAllContacts.FromJsonString( JsonBase.ToString );
-    for AContact in RetornoAllContacts.result do
-        frm_principal.AddContactList( AContact.id + ' - ' + AContact.name );
+    if Assigned( _Inject ) then
+    begin
+      _Inject.RetornoAllContacts := TRetornoAllContacts.FromJsonString( JsonBase.ToString );
+
+      if Assigned( _Inject.OnGetContactList ) then
+         _Inject.OnGetContactList(Self);
+    end;
   end;
+
 begin
   PrepareJson;
   if Assigned(JsonBase) then

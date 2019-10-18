@@ -65,6 +65,7 @@ end;
 TContactClass = class
 private
   FFormattedName: String;
+  FGlobal: String;
   FId: String;
   FIsBusiness: Boolean;
   FIsEnterprise: Boolean;
@@ -79,6 +80,7 @@ private
   FType: String;
 public
   property formattedName: String read FFormattedName write FFormattedName;
+  property Global: String read FGlobal write FGlobal;
   property id: String read FId write FId;
   property isBusiness: Boolean read FIsBusiness write FIsBusiness;
   property isEnterprise: Boolean read FIsEnterprise write FIsEnterprise;
