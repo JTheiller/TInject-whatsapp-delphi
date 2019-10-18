@@ -51,6 +51,8 @@ type
     Button1: TButton;
     Label4: TLabel;
     btnGetContacts: TButton;
+    btnNotRead: TButton;
+    Memo2: TMemo;
     procedure Chromium1BeforeClose(Sender: TObject; const browser: ICefBrowser);
     procedure FormShow(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -86,6 +88,7 @@ type
     procedure Button4Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure btnGetContactsClick(Sender: TObject);
+    procedure btnNotReadClick(Sender: TObject);
 
   protected
 
@@ -153,6 +156,11 @@ end;
 procedure Tfrm_principal.btnGetContactsClick(Sender: TObject);
 begin
   InjectWhatsapp1.GetContacts();
+end;
+
+procedure Tfrm_principal.btnNotReadClick(Sender: TObject);
+begin
+  InjectWhatsapp1.GetUnReadMessages();
 end;
 
 procedure Tfrm_principal.WMMove(var aMessage : TWMMove);

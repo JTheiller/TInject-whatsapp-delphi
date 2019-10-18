@@ -17,7 +17,7 @@ uses
   Vcl.StdCtrls, Vcl.ComCtrls, System.ImageList, Vcl.ImgList, System.JSON,
   Vcl.Buttons, Vcl.Imaging.pngimage,
 
-  Rest.Json;
+  Rest.Json, uClasses;
 
   const
     CEFBROWSER_CREATED          = WM_APP + $100;
@@ -226,43 +226,43 @@ procedure Tfrm_autenticaWhats.Chromium1Jsdialog(Sender: TObject;
   const browser: ICefBrowser; const originUrl: ustring;
   dialogType: TCefJsDialogType; const messageText, defaultPromptText: ustring;
   const callback: ICefJsDialogCallback; out suppressMessage, Result: Boolean);
-const
-  InjectResult = 'TInjectResult:';
 var
   JsonBase: TJSONObject;
-  JsonArray: TJSONArray;
-  JSonItem: TJSONValue;
-  Text: String;
-  ANumber: String;
-begin
-  //Capture Result Js
 
-  //Temporary
-  //if Copy(messageText,1,Length(InjectResult)) = InjectResult then
+  procedure PrepareJson;
   begin
-    Text := '{"result": '
-             + messageText
-           +'}';
-
+    Text := '{"result": ' + messageText +'}';
     JsonBase := TJSONObject.Create;
-    JsonBase.Parse(TEncoding.UTF8.GetBytes(string(Text)), 0);
-
-    if Assigned(JsonBase) then
-    begin
-      JsonArray := JsonBase.GetValue('result') as TJSONArray;
-      for JSonItem in JsonArray do
-      begin
-        ANumber := Copy(TJSONObject(JSonItem).GetValue('id').Value
-                       ,1,Pos('@',TJSONObject(JSonItem).GetValue('id').Value)-1);
-
-        //Add uses Principal for teste... rsrs tem que desfazer rsrs
-        frm_principal.AddContactList( ANumber );
-      end;
-    end;
-
-    //Evitar apresentar a mensagem.
-    suppressMessage := True;
+    JsonBase.Parse(TEncoding.UTF8.GetBytes(string(Text)), 0); //POG, ocorre de ter objeto com ultima propriedade/value finalizado com virguro, nao deveria existir...
   end;
+
+//  procedure UnRead;
+//  var
+//    RetornoUnReadMessages : TRetornoUnReadMessages;
+//  begin
+//    RetornoUnReadMessages := TRetornoUnReadMessages.FromJsonString( JsonBase.ToString );
+//    ShowMessage(RetornoUnReadMessages.Result[0].contact.name);
+//  end;
+
+  procedure AllContact;
+  var
+    RetornoAllContacts : TRetornoAllContacts;
+    AContact: TContactClass;
+  begin
+    RetornoAllContacts := TRetornoAllContacts.FromJsonString( JsonBase.ToString );
+    for AContact in RetornoAllContacts.result do
+        frm_principal.AddContactList( AContact.id + ' - ' + AContact.name );
+  end;
+begin
+  PrepareJson;
+  if Assigned(JsonBase) then
+  begin
+    //UnRead;
+    AllContact;
+  end;
+
+  //Evitar apresentar a mensagem.
+  suppressMessage := True;
 end;
 
 procedure Tfrm_autenticaWhats.Chromium1LoadEnd(Sender: TObject;
@@ -343,7 +343,7 @@ function Tfrm_autenticaWhats.GetUnReadMessages: String;
 var
  JS: string;
 begin
- JS := 'window.WAPI.getUnreadMessages(includeMe="True",includeNotifications="True",use_unread_count="True");';
+ JS := 'WAPI.getUnreadMessages(includeMe="True",includeNotifications="True",use_unread_count="True");';
 
  if Chromium1.Browser <> nil then
       Chromium1.Browser.MainFrame.ExecuteJavaScript(JS, 'about:blank', 0);

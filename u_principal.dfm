@@ -15,12 +15,15 @@ object frm_principal: Tfrm_principal
   WindowState = wsMaximized
   OnClose = FormClose
   OnShow = FormShow
+  DesignSize = (
+    1020
+    577)
   PixelsPerInch = 96
   TextHeight = 13
   object Image2: TImage
-    Left = 143
+    Left = 324
     Top = 243
-    Width = 737
+    Width = 324
     Height = 334
     Align = alClient
     Center = True
@@ -10726,11 +10729,22 @@ object frm_principal: Tfrm_principal
       TabOrder = 7
       OnClick = btnGetContactsClick
     end
+    object btnNotRead: TButton
+      Left = 246
+      Top = 137
+      Width = 147
+      Height = 25
+      Caption = 'Mensagens N'#227'o lidas'
+      ImageIndex = 0
+      Images = ImageList1
+      TabOrder = 8
+      OnClick = btnNotReadClick
+    end
   end
   object Memo1: TMemo
-    Left = 880
+    Left = 648
     Top = 243
-    Width = 140
+    Width = 372
     Height = 334
     Align = alRight
     Font.Charset = DEFAULT_CHARSET
@@ -10745,7 +10759,7 @@ object frm_principal: Tfrm_principal
     AlignWithMargins = True
     Left = 3
     Top = 246
-    Width = 137
+    Width = 318
     Height = 328
     Align = alLeft
     Columns = <>
@@ -10756,6 +10770,16 @@ object frm_principal: Tfrm_principal
     StateImages = ImageList1
     TabOrder = 2
     ViewStyle = vsSmallIcon
+  end
+  object Memo2: TMemo
+    Left = 61
+    Top = 248
+    Width = 69
+    Height = 321
+    Anchors = [akLeft, akTop, akBottom]
+    Lines.Strings = (
+      'Memo2')
+    TabOrder = 3
   end
   object ImageList1: TImageList
     ColorDepth = cdDefault

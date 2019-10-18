@@ -109,6 +109,7 @@
         </DCCReference>
         <DCCReference Include="Services\UnitCEFHandlerSessionChromium.pas"/>
         <DCCReference Include="Services\UnitCEFLoadHandlerChromium.pas"/>
+        <DCCReference Include="Model\uClasses.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

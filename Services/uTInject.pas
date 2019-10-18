@@ -53,6 +53,7 @@ type
     procedure sendBase64(vBase64, vNum, vFileName, vMess: string);
     procedure fileToBase64(vFile: string);
     function GetContacts: String;
+    function GetUnReadMessages: String;
   published
     { Published declarations }
 
@@ -124,6 +125,43 @@ begin
             if Assigned(frm_autenticaWhats) then
             begin
               frm_autenticaWhats.GetContacts;
+            end;
+          end);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if FMySubComp1.ShowRandom then
+            begin
+              showMessage('Random: '+vGetDelay.ToString+' ms');
+            end;
+          end);
+
+          finally
+          begin
+
+          end;
+        end;
+      end);
+  FActivityDialogThread.FreeOnTerminate := False;
+  FActivityDialogThread.Start;
+end;
+
+function TInjectWhatsapp.GetUnReadMessages: String;
+begin
+  FActivityDialogThread := TThread.CreateAnonymousThread(procedure
+      var vGetDelay: integer;
+      begin
+        try
+
+          vGetDelay := random(vDelay);
+
+          sleep(vGetDelay);
+
+          TThread.Synchronize(nil, procedure
+          begin
+            if Assigned(frm_autenticaWhats) then
+            begin
+              frm_autenticaWhats.GetUnReadMessages;
             end;
           end);
 
