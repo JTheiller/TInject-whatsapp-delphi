@@ -53,7 +53,6 @@ type
     btnGetContacts: TButton;
     btnNotRead: TButton;
     Memo2: TMemo;
-    Button2: TButton;
     procedure Chromium1BeforeClose(Sender: TObject; const browser: ICefBrowser);
     procedure FormShow(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);

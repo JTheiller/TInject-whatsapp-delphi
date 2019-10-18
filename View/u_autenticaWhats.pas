@@ -248,8 +248,14 @@ var
   begin
     if Assigned( _Inject ) then
     begin
+      //Destroi caso já instanciado
+      if Assigned(_Inject.AllContacts) then
+         _Inject.AllContacts.Free;
+
+      //Instancia novo objeto com base no retono json
       _Inject.AllContacts := TRetornoAllContacts.FromJsonString( JsonBase.ToString );
 
+      //Dispara Notify
       if Assigned( _Inject.OnGetContactList ) then
          _Inject.OnGetContactList(Self);
     end;

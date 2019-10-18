@@ -10740,17 +10740,6 @@ object frm_principal: Tfrm_principal
       TabOrder = 8
       OnClick = btnNotReadClick
     end
-    object Button2: TButton
-      Left = 399
-      Top = 199
-      Width = 147
-      Height = 25
-      Caption = 'Lista de contatos'
-      ImageIndex = 0
-      Images = ImageList1
-      TabOrder = 9
-      OnClick = btnGetContactsClick
-    end
   end
   object Memo1: TMemo
     Left = 648
